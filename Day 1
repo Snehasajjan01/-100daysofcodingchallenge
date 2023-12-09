@@ -1,0 +1,157 @@
+1.Two Sum
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+You can return the answer in any order.
+Example 1:
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+Example 2:
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+Example 3:
+Input: nums = [3,3], target = 6
+Output: [0,1]
+Explaination:
+1.Create an empty hash table to store elements and their indices.
+2.Iterate through the array from left to right.
+3.For each element nums[i], calculate the complement by subtracting it from the target: complement = target - nums[i].
+4.Check if the complement exists in the hash table. If it does, we have found a solution.
+5.If the complement does not exist in the hash table, add the current element nums[i] to the hash table with its index as the value.
+6.Repeat steps 3-5 until we find a solution or reach the end of the array.
+7.If no solution is found, return an empty array or an appropriate indicator.
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        int n = nums.length;
+        for(int i = 0; i < n-1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (nums[i] + nums[j] ==target) {
+                    return new int[]{i, j};
+                }
+
+            }
+        }  
+        return new int[]{};
+
+        
+    }
+}
+*******************************************************************************************************************************************************************************************
+2.Add Two Numbers
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Example 1:
+Input: l1 = [2,4,3], l2 = [5,6,4]
+Output: [7,0,8]
+Explanation: 342 + 465 = 807.
+Example 2:
+
+Input: l1 = [0], l2 = [0]
+Output: [0]
+Example 3:
+
+Input: l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+Output: [8,9,9,9,0,0,0,1]
+Explanation:
+1.Create a placeholder node called dummyHead with a value of 0. This node will hold the resulting linked list.
+2.Initialize a pointer called tail and set it to dummyHead. This pointer will keep track of the last node in the result list.
+3.Initialize a variable called carry to 0. This variable will store the carry value during addition.
+4.Start a loop that continues until there are no more digits in both input lists (l1 and l2) and there is no remaining carry value.
+5.Inside the loop:
+Check if there is a digit in the current node of l1. If it exists, assign its value to a variable called digit1. Otherwise, set digit1 to 0.
+Check if there is a digit in the current node of l2. If it exists, assign its value to a variable called digit2. Otherwise, set digit2 to 0.
+Add the current digits from l1 and l2, along with the carry value from the previous iteration, and store the sum in a variable called sum.
+Calculate the unit digit of sum by taking the modulus (%) of sum by 10. This digit will be placed in a new node for the result.
+Update the carry variable by dividing sum by 10 and taking the integer division (/) part. This gives us the carry value for the next iteration.
+Create a new node with the calculated digit as its value.
+Attach the new node to the tail node of the result list.
+Move the tail pointer to the newly added node.
+Move to the next nodes in both l1 and l2, if they exist. If either list is exhausted, set the corresponding pointer to nullptr.
+6.After the loop, obtain the actual result list by skipping the dummyHead node.
+7.Delete the dummyHead node.
+8.Return the resulting list.
+ /**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        int carry = 0;
+        while(l1 !=null || l2!= null || carry != 0){
+            int digit1=(l1!=null)?l1.val:0;
+            int digit2=(l2!=null)?l2.val:0;
+            int sum = digit1+digit2+carry;
+            int digit=sum%10;
+            carry=sum/10;
+            ListNode newNode = new ListNode(digit);
+            tail.next = newNode;
+            tail=tail.next;
+            l1=(l1!=null)?l1.next:null;
+            l2=(l2!=null)?l2.next:null;
+        }
+        ListNode result=dummyHead.next;
+        dummyHead.next=null;
+        return result;
+        
+    }
+}
+*********************************************************************************************************************************************************************************************
+3.Longest Substring without repeating Characters
+Given a string s, find the length of the longest substring without repeating characters.
+Example 1:
+Input: s = "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+Example 2:
+Input: s = "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+Example 3:
+Input: s = "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3.
+Explanation:
+1.We use a set (charSet) to keep track of unique characters in the current substring.
+2.We maintain two pointers, left and right, to represent the boundaries of the current substring.
+3.The maxLength variable keeps track of the length of the longest substring encountered so far.
+4.We iterate through the string using the right pointer.
+5.If the current character is not in the set (charSet), it means we have a new unique character.
+6.We insert the character into the set and update the maxLength if necessary.
+7.If the character is already present in the set, it indicates a repeating character within the current substring.
+8.In this case, we move the left pointer forward, removing characters from the set until the repeating character is no longer present.
+9.We insert the current character into the set and continue the iteration.
+10.Finally, we return the maxLength as the length of the longest substring without repeating characters.
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n= s.length();
+        int maxLength = 0;
+        Set<Character>charSet = new HashSet<>();
+        int left=0;
+        for(int right =0;right<n;right++){
+            if(!charSet.contains(s.charAt(right))){
+                charSet.add(s.charAt(right));
+                maxLength=Math.max(maxLength, right-left + 1);
+            }
+            else{
+                while(charSet.contains(s.charAt(right))){
+                    charSet.remove(s.charAt(left));
+                    left++;
+                }
+                charSet.add(s.charAt(right));
+            }
+        }
+        return maxLength;
+        
+    }
+}
+
